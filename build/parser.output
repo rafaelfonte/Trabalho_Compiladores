@@ -1,0 +1,2818 @@
+Terminals unused in grammar
+
+   TOKEN_ERRO
+
+
+Grammar
+
+    0 $accept: s $end
+
+    1 $@1: /* empty */
+
+    2 s: $@1 k TOKEN_EOF
+
+    3 $@2: /* empty */
+
+    4 k: declaracoes $@2 k
+    5  | declaracoes
+
+    6 declaracoes: decl_variavel
+    7            | decl_vetor
+    8            | decl_funcao
+
+    9 tipo: TK_PR_INT
+   10     | TK_PR_FLOAT
+   11     | TK_PR_BOOL
+   12     | TK_PR_CHAR
+   13     | TK_PR_STRING
+
+   14 decl_variavel: tipo ':' TK_IDENTIFICADOR ';'
+
+   15 decl_vetor: tipo ':' TK_IDENTIFICADOR dimensoes ';'
+
+   16 dimensoes: '[' TK_LIT_INT ']'
+   17          | '[' TK_LIT_INT ']' dimensoes
+
+   18 decl_parametro: tipo ':' TK_IDENTIFICADOR
+
+   19 $@3: /* empty */
+
+   20 decl_parametro: tipo ':' TK_IDENTIFICADOR ',' $@3 decl_parametro
+
+   21 decl_funcao: cabecalho decl_locais passou_decl_action bloco
+   22            | cabecalho passou_decl_action bloco
+
+   23 passou_decl_action: /* empty */
+
+   24 cabecalho: tipo ':' id_funcao init_escopo_local_action '(' decl_parametro ')'
+   25          | tipo ':' id_funcao init_escopo_local_action '(' ')'
+
+   26 id_funcao: TK_IDENTIFICADOR
+
+   27 init_escopo_local_action: /* empty */
+
+   28 decl_locais: decl_variavel decl_locais
+   29            | decl_variavel
+
+   30 bloco: '{' comandos '}'
+   31      | '{' '}'
+
+   32 comandos: comando_simples ';' comandos
+   33         | fluxo_controle comandos
+   34         | comando_simples ';'
+   35         | fluxo_controle
+   36         | bloco ';' comandos
+   37         | bloco
+   38         | ';'
+
+   39 comando: comando_simples
+   40        | fluxo_controle
+
+   41 comando_simples: atribuicao
+   42                | entrada
+   43                | saida
+   44                | retorno
+   45                | chamada_funcao
+
+   46 atribuicao: variavel_atr_simples expressao
+   47           | variavel_atr_index_id variavel_atr_index_arvore expressao ']' '=' expressao
+
+   48 variavel_atr_simples: TK_IDENTIFICADOR '='
+
+   49 variavel_atr_index_id: TK_IDENTIFICADOR
+
+   50 variavel_atr_index_arvore: '['
+
+   51 $@4: /* empty */
+
+   52 entrada: TK_PR_INPUT $@4 TK_IDENTIFICADOR
+
+   53 saida: TK_PR_OUTPUT lista_elementos
+
+   54 lista_elementos: expressao
+   55                | expressao ',' lista_elementos
+
+   56 retorno: TK_PR_RETURN expressao
+
+   57 chamada_funcao: chamada_funcao_id '(' lista_argumentos ')'
+   58               | chamada_funcao_id '(' ')'
+
+   59 chamada_funcao_id: TK_IDENTIFICADOR
+
+   60 expressao_aritmetica: expressao '+' expressao
+   61                     | expressao '-' expressao
+   62                     | expressao '*' expressao
+   63                     | expressao '/' expressao
+   64                     | '-' expressao
+
+   65 expressao_logica: expressao TK_OC_LE expressao
+   66                 | expressao TK_OC_GE expressao
+   67                 | expressao '<' expressao
+   68                 | expressao '>' expressao
+   69                 | expressao TK_OC_EQ expressao
+   70                 | expressao TK_OC_NE expressao
+   71                 | expressao TK_OC_AND expressao
+   72                 | expressao TK_OC_OR expressao
+   73                 | '!' expressao
+
+   74 expressao: expressao_aritmetica
+   75          | expressao_logica
+   76          | '(' expressao ')'
+   77          | expressao_indexada_id expressao_indexada_dim
+   78          | TK_IDENTIFICADOR
+   79          | TK_LIT_INT
+   80          | TK_LIT_TRUE
+   81          | TK_LIT_FALSE
+   82          | TK_LIT_FLOAT
+   83          | chamada_funcao
+   84          | TK_LIT_STRING
+   85          | TK_LIT_CHAR
+
+   86 expressao_indexada_id: TK_IDENTIFICADOR
+
+   87 expressao_indexada_dim: '[' expressao ']'
+   88                       | '[' expressao ']' expressao_indexada_dim
+
+   89 lista_argumentos: expressao
+
+   90 $@5: /* empty */
+
+   91 lista_argumentos: expressao ',' $@5 lista_argumentos
+
+   92 fluxo_controle: TK_PR_IF '(' expressao_logica ')' TK_PR_THEN then_else
+   93               | TK_PR_IF '(' expressao_logica ')' TK_PR_THEN then TK_PR_ELSE then_else
+   94               | TK_PR_WHILE '(' expressao_logica ')' TK_PR_DO comandos_while_do ';'
+   95               | TK_PR_DO comandos_while_do TK_PR_WHILE '(' expressao_logica ')' ';'
+
+   96 then: comando
+   97     | bloco
+
+   98 then_else: comando ';'
+   99          | bloco ';'
+
+  100 comandos_while_do: comando
+  101                  | bloco
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 73
+'(' (40) 24 25 57 58 76 92 93 94 95
+')' (41) 24 25 57 58 76 92 93 94 95
+'*' (42) 62
+'+' (43) 60
+',' (44) 20 55 91
+'-' (45) 61 64
+'/' (47) 63
+':' (58) 14 15 18 20 24 25
+';' (59) 14 15 32 34 36 38 94 95 98 99
+'<' (60) 67
+'=' (61) 47 48
+'>' (62) 68
+'[' (91) 16 17 50 87 88
+']' (93) 16 17 47 87 88
+'{' (123) 30 31
+'}' (125) 30 31
+error (256)
+TK_PR_INT (258) 9
+TK_PR_FLOAT (259) 10
+TK_PR_BOOL (260) 11
+TK_PR_CHAR (261) 12
+TK_PR_STRING (262) 13
+TK_PR_IF (263) 92 93
+TK_PR_THEN (264) 92 93
+TK_PR_ELSE (265) 93
+TK_PR_WHILE (266) 94 95
+TK_PR_DO (267) 94 95
+TK_PR_INPUT (268) 52
+TK_PR_OUTPUT (269) 53
+TK_PR_RETURN (270) 56
+TK_OC_LE (271) 65
+TK_OC_GE (272) 66
+TK_OC_EQ (273) 69
+TK_OC_NE (274) 70
+TK_OC_AND (275) 71
+TK_OC_OR (276) 72
+TK_LIT_INT (277) 16 17 79
+TK_LIT_FLOAT (278) 82
+TK_LIT_FALSE (279) 81
+TK_LIT_TRUE (280) 80
+TK_LIT_CHAR (281) 85
+TK_LIT_STRING (282) 84
+TK_IDENTIFICADOR (283) 14 15 18 20 26 48 49 52 59 78 86
+TOKEN_ERRO (284)
+TOKEN_EOF (285) 2
+
+
+Nonterminals, with rules where they appear
+
+$accept (48)
+    on left: 0
+s (49)
+    on left: 2, on right: 0
+$@1 (50)
+    on left: 1, on right: 2
+k (51)
+    on left: 4 5, on right: 2 4
+$@2 (52)
+    on left: 3, on right: 4
+declaracoes (53)
+    on left: 6 7 8, on right: 4 5
+tipo (54)
+    on left: 9 10 11 12 13, on right: 14 15 18 20 24 25
+decl_variavel (55)
+    on left: 14, on right: 6 28 29
+decl_vetor (56)
+    on left: 15, on right: 7
+dimensoes (57)
+    on left: 16 17, on right: 15 17
+decl_parametro (58)
+    on left: 18 20, on right: 20 24
+$@3 (59)
+    on left: 19, on right: 20
+decl_funcao (60)
+    on left: 21 22, on right: 8
+passou_decl_action (61)
+    on left: 23, on right: 21 22
+cabecalho (62)
+    on left: 24 25, on right: 21 22
+id_funcao (63)
+    on left: 26, on right: 24 25
+init_escopo_local_action (64)
+    on left: 27, on right: 24 25
+decl_locais (65)
+    on left: 28 29, on right: 21 28
+bloco (66)
+    on left: 30 31, on right: 21 22 36 37 97 99 101
+comandos (67)
+    on left: 32 33 34 35 36 37 38, on right: 30 32 33 36
+comando (68)
+    on left: 39 40, on right: 96 98 100
+comando_simples (69)
+    on left: 41 42 43 44 45, on right: 32 34 39
+atribuicao (70)
+    on left: 46 47, on right: 41
+variavel_atr_simples (71)
+    on left: 48, on right: 46
+variavel_atr_index_id (72)
+    on left: 49, on right: 47
+variavel_atr_index_arvore (73)
+    on left: 50, on right: 47
+entrada (74)
+    on left: 52, on right: 42
+$@4 (75)
+    on left: 51, on right: 52
+saida (76)
+    on left: 53, on right: 43
+lista_elementos (77)
+    on left: 54 55, on right: 53 55
+retorno (78)
+    on left: 56, on right: 44
+chamada_funcao (79)
+    on left: 57 58, on right: 45 83
+chamada_funcao_id (80)
+    on left: 59, on right: 57 58
+expressao_aritmetica (81)
+    on left: 60 61 62 63 64, on right: 74
+expressao_logica (82)
+    on left: 65 66 67 68 69 70 71 72 73, on right: 75 92 93 94 95
+expressao (83)
+    on left: 74 75 76 77 78 79 80 81 82 83 84 85, on right: 46 47 54
+    55 56 60 61 62 63 64 65 66 67 68 69 70 71 72 73 76 87 88 89 91
+expressao_indexada_id (84)
+    on left: 86, on right: 77
+expressao_indexada_dim (85)
+    on left: 87 88, on right: 77 88
+lista_argumentos (86)
+    on left: 89 91, on right: 57 91
+$@5 (87)
+    on left: 90, on right: 91
+fluxo_controle (88)
+    on left: 92 93 94 95, on right: 33 35 40
+then (89)
+    on left: 96 97, on right: 93
+then_else (90)
+    on left: 98 99, on right: 92 93
+comandos_while_do (91)
+    on left: 100 101, on right: 94 95
+
+
+state 0
+
+    0 $accept: . s $end
+
+    $default  reduce using rule 1 ($@1)
+
+    s    go to state 1
+    $@1  go to state 2
+
+
+state 1
+
+    0 $accept: s . $end
+
+    $end  shift, and go to state 3
+
+
+state 2
+
+    2 s: $@1 . k TOKEN_EOF
+
+    TK_PR_INT     shift, and go to state 4
+    TK_PR_FLOAT   shift, and go to state 5
+    TK_PR_BOOL    shift, and go to state 6
+    TK_PR_CHAR    shift, and go to state 7
+    TK_PR_STRING  shift, and go to state 8
+
+    k              go to state 9
+    declaracoes    go to state 10
+    tipo           go to state 11
+    decl_variavel  go to state 12
+    decl_vetor     go to state 13
+    decl_funcao    go to state 14
+    cabecalho      go to state 15
+
+
+state 3
+
+    0 $accept: s $end .
+
+    $default  accept
+
+
+state 4
+
+    9 tipo: TK_PR_INT .
+
+    $default  reduce using rule 9 (tipo)
+
+
+state 5
+
+   10 tipo: TK_PR_FLOAT .
+
+    $default  reduce using rule 10 (tipo)
+
+
+state 6
+
+   11 tipo: TK_PR_BOOL .
+
+    $default  reduce using rule 11 (tipo)
+
+
+state 7
+
+   12 tipo: TK_PR_CHAR .
+
+    $default  reduce using rule 12 (tipo)
+
+
+state 8
+
+   13 tipo: TK_PR_STRING .
+
+    $default  reduce using rule 13 (tipo)
+
+
+state 9
+
+    2 s: $@1 k . TOKEN_EOF
+
+    TOKEN_EOF  shift, and go to state 16
+
+
+state 10
+
+    4 k: declaracoes . $@2 k
+    5  | declaracoes .
+
+    TOKEN_EOF  reduce using rule 5 (k)
+    $default   reduce using rule 3 ($@2)
+
+    $@2  go to state 17
+
+
+state 11
+
+   14 decl_variavel: tipo . ':' TK_IDENTIFICADOR ';'
+   15 decl_vetor: tipo . ':' TK_IDENTIFICADOR dimensoes ';'
+   24 cabecalho: tipo . ':' id_funcao init_escopo_local_action '(' decl_parametro ')'
+   25          | tipo . ':' id_funcao init_escopo_local_action '(' ')'
+
+    ':'  shift, and go to state 18
+
+
+state 12
+
+    6 declaracoes: decl_variavel .
+
+    $default  reduce using rule 6 (declaracoes)
+
+
+state 13
+
+    7 declaracoes: decl_vetor .
+
+    $default  reduce using rule 7 (declaracoes)
+
+
+state 14
+
+    8 declaracoes: decl_funcao .
+
+    $default  reduce using rule 8 (declaracoes)
+
+
+state 15
+
+   21 decl_funcao: cabecalho . decl_locais passou_decl_action bloco
+   22            | cabecalho . passou_decl_action bloco
+
+    TK_PR_INT     shift, and go to state 4
+    TK_PR_FLOAT   shift, and go to state 5
+    TK_PR_BOOL    shift, and go to state 6
+    TK_PR_CHAR    shift, and go to state 7
+    TK_PR_STRING  shift, and go to state 8
+
+    $default  reduce using rule 23 (passou_decl_action)
+
+    tipo                go to state 19
+    decl_variavel       go to state 20
+    passou_decl_action  go to state 21
+    decl_locais         go to state 22
+
+
+state 16
+
+    2 s: $@1 k TOKEN_EOF .
+
+    $default  reduce using rule 2 (s)
+
+
+state 17
+
+    4 k: declaracoes $@2 . k
+
+    TK_PR_INT     shift, and go to state 4
+    TK_PR_FLOAT   shift, and go to state 5
+    TK_PR_BOOL    shift, and go to state 6
+    TK_PR_CHAR    shift, and go to state 7
+    TK_PR_STRING  shift, and go to state 8
+
+    k              go to state 23
+    declaracoes    go to state 10
+    tipo           go to state 11
+    decl_variavel  go to state 12
+    decl_vetor     go to state 13
+    decl_funcao    go to state 14
+    cabecalho      go to state 15
+
+
+state 18
+
+   14 decl_variavel: tipo ':' . TK_IDENTIFICADOR ';'
+   15 decl_vetor: tipo ':' . TK_IDENTIFICADOR dimensoes ';'
+   24 cabecalho: tipo ':' . id_funcao init_escopo_local_action '(' decl_parametro ')'
+   25          | tipo ':' . id_funcao init_escopo_local_action '(' ')'
+
+    TK_IDENTIFICADOR  shift, and go to state 24
+
+    id_funcao  go to state 25
+
+
+state 19
+
+   14 decl_variavel: tipo . ':' TK_IDENTIFICADOR ';'
+
+    ':'  shift, and go to state 26
+
+
+state 20
+
+   28 decl_locais: decl_variavel . decl_locais
+   29            | decl_variavel .
+
+    TK_PR_INT     shift, and go to state 4
+    TK_PR_FLOAT   shift, and go to state 5
+    TK_PR_BOOL    shift, and go to state 6
+    TK_PR_CHAR    shift, and go to state 7
+    TK_PR_STRING  shift, and go to state 8
+
+    $default  reduce using rule 29 (decl_locais)
+
+    tipo           go to state 19
+    decl_variavel  go to state 20
+    decl_locais    go to state 27
+
+
+state 21
+
+   22 decl_funcao: cabecalho passou_decl_action . bloco
+
+    '{'  shift, and go to state 28
+
+    bloco  go to state 29
+
+
+state 22
+
+   21 decl_funcao: cabecalho decl_locais . passou_decl_action bloco
+
+    $default  reduce using rule 23 (passou_decl_action)
+
+    passou_decl_action  go to state 30
+
+
+state 23
+
+    4 k: declaracoes $@2 k .
+
+    $default  reduce using rule 4 (k)
+
+
+state 24
+
+   14 decl_variavel: tipo ':' TK_IDENTIFICADOR . ';'
+   15 decl_vetor: tipo ':' TK_IDENTIFICADOR . dimensoes ';'
+   26 id_funcao: TK_IDENTIFICADOR .
+
+    ';'  shift, and go to state 31
+    '['  shift, and go to state 32
+
+    $default  reduce using rule 26 (id_funcao)
+
+    dimensoes  go to state 33
+
+
+state 25
+
+   24 cabecalho: tipo ':' id_funcao . init_escopo_local_action '(' decl_parametro ')'
+   25          | tipo ':' id_funcao . init_escopo_local_action '(' ')'
+
+    $default  reduce using rule 27 (init_escopo_local_action)
+
+    init_escopo_local_action  go to state 34
+
+
+state 26
+
+   14 decl_variavel: tipo ':' . TK_IDENTIFICADOR ';'
+
+    TK_IDENTIFICADOR  shift, and go to state 35
+
+
+state 27
+
+   28 decl_locais: decl_variavel decl_locais .
+
+    $default  reduce using rule 28 (decl_locais)
+
+
+state 28
+
+   30 bloco: '{' . comandos '}'
+   31      | '{' . '}'
+
+    TK_PR_IF          shift, and go to state 36
+    TK_PR_WHILE       shift, and go to state 37
+    TK_PR_DO          shift, and go to state 38
+    TK_PR_INPUT       shift, and go to state 39
+    TK_PR_OUTPUT      shift, and go to state 40
+    TK_PR_RETURN      shift, and go to state 41
+    TK_IDENTIFICADOR  shift, and go to state 42
+    ';'               shift, and go to state 43
+    '{'               shift, and go to state 28
+    '}'               shift, and go to state 44
+
+    bloco                  go to state 45
+    comandos               go to state 46
+    comando_simples        go to state 47
+    atribuicao             go to state 48
+    variavel_atr_simples   go to state 49
+    variavel_atr_index_id  go to state 50
+    entrada                go to state 51
+    saida                  go to state 52
+    retorno                go to state 53
+    chamada_funcao         go to state 54
+    chamada_funcao_id      go to state 55
+    fluxo_controle         go to state 56
+
+
+state 29
+
+   22 decl_funcao: cabecalho passou_decl_action bloco .
+
+    $default  reduce using rule 22 (decl_funcao)
+
+
+state 30
+
+   21 decl_funcao: cabecalho decl_locais passou_decl_action . bloco
+
+    '{'  shift, and go to state 28
+
+    bloco  go to state 57
+
+
+state 31
+
+   14 decl_variavel: tipo ':' TK_IDENTIFICADOR ';' .
+
+    $default  reduce using rule 14 (decl_variavel)
+
+
+state 32
+
+   16 dimensoes: '[' . TK_LIT_INT ']'
+   17          | '[' . TK_LIT_INT ']' dimensoes
+
+    TK_LIT_INT  shift, and go to state 58
+
+
+state 33
+
+   15 decl_vetor: tipo ':' TK_IDENTIFICADOR dimensoes . ';'
+
+    ';'  shift, and go to state 59
+
+
+state 34
+
+   24 cabecalho: tipo ':' id_funcao init_escopo_local_action . '(' decl_parametro ')'
+   25          | tipo ':' id_funcao init_escopo_local_action . '(' ')'
+
+    '('  shift, and go to state 60
+
+
+state 35
+
+   14 decl_variavel: tipo ':' TK_IDENTIFICADOR . ';'
+
+    ';'  shift, and go to state 31
+
+
+state 36
+
+   92 fluxo_controle: TK_PR_IF . '(' expressao_logica ')' TK_PR_THEN then_else
+   93               | TK_PR_IF . '(' expressao_logica ')' TK_PR_THEN then TK_PR_ELSE then_else
+
+    '('  shift, and go to state 61
+
+
+state 37
+
+   94 fluxo_controle: TK_PR_WHILE . '(' expressao_logica ')' TK_PR_DO comandos_while_do ';'
+
+    '('  shift, and go to state 62
+
+
+state 38
+
+   95 fluxo_controle: TK_PR_DO . comandos_while_do TK_PR_WHILE '(' expressao_logica ')' ';'
+
+    TK_PR_IF          shift, and go to state 36
+    TK_PR_WHILE       shift, and go to state 37
+    TK_PR_DO          shift, and go to state 38
+    TK_PR_INPUT       shift, and go to state 39
+    TK_PR_OUTPUT      shift, and go to state 40
+    TK_PR_RETURN      shift, and go to state 41
+    TK_IDENTIFICADOR  shift, and go to state 42
+    '{'               shift, and go to state 28
+
+    bloco                  go to state 63
+    comando                go to state 64
+    comando_simples        go to state 65
+    atribuicao             go to state 48
+    variavel_atr_simples   go to state 49
+    variavel_atr_index_id  go to state 50
+    entrada                go to state 51
+    saida                  go to state 52
+    retorno                go to state 53
+    chamada_funcao         go to state 54
+    chamada_funcao_id      go to state 55
+    fluxo_controle         go to state 66
+    comandos_while_do      go to state 67
+
+
+state 39
+
+   52 entrada: TK_PR_INPUT . $@4 TK_IDENTIFICADOR
+
+    $default  reduce using rule 51 ($@4)
+
+    $@4  go to state 68
+
+
+state 40
+
+   53 saida: TK_PR_OUTPUT . lista_elementos
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    lista_elementos        go to state 79
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 83
+    expressao_indexada_id  go to state 84
+
+
+state 41
+
+   56 retorno: TK_PR_RETURN . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 85
+    expressao_indexada_id  go to state 84
+
+
+state 42
+
+   48 variavel_atr_simples: TK_IDENTIFICADOR . '='
+   49 variavel_atr_index_id: TK_IDENTIFICADOR .
+   59 chamada_funcao_id: TK_IDENTIFICADOR .
+
+    '='  shift, and go to state 86
+
+    '('       reduce using rule 59 (chamada_funcao_id)
+    $default  reduce using rule 49 (variavel_atr_index_id)
+
+
+state 43
+
+   38 comandos: ';' .
+
+    $default  reduce using rule 38 (comandos)
+
+
+state 44
+
+   31 bloco: '{' '}' .
+
+    $default  reduce using rule 31 (bloco)
+
+
+state 45
+
+   36 comandos: bloco . ';' comandos
+   37         | bloco .
+
+    ';'  shift, and go to state 87
+
+    $default  reduce using rule 37 (comandos)
+
+
+state 46
+
+   30 bloco: '{' comandos . '}'
+
+    '}'  shift, and go to state 88
+
+
+state 47
+
+   32 comandos: comando_simples . ';' comandos
+   34         | comando_simples . ';'
+
+    ';'  shift, and go to state 89
+
+
+state 48
+
+   41 comando_simples: atribuicao .
+
+    $default  reduce using rule 41 (comando_simples)
+
+
+state 49
+
+   46 atribuicao: variavel_atr_simples . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 90
+    expressao_indexada_id  go to state 84
+
+
+state 50
+
+   47 atribuicao: variavel_atr_index_id . variavel_atr_index_arvore expressao ']' '=' expressao
+
+    '['  shift, and go to state 91
+
+    variavel_atr_index_arvore  go to state 92
+
+
+state 51
+
+   42 comando_simples: entrada .
+
+    $default  reduce using rule 42 (comando_simples)
+
+
+state 52
+
+   43 comando_simples: saida .
+
+    $default  reduce using rule 43 (comando_simples)
+
+
+state 53
+
+   44 comando_simples: retorno .
+
+    $default  reduce using rule 44 (comando_simples)
+
+
+state 54
+
+   45 comando_simples: chamada_funcao .
+
+    $default  reduce using rule 45 (comando_simples)
+
+
+state 55
+
+   57 chamada_funcao: chamada_funcao_id . '(' lista_argumentos ')'
+   58               | chamada_funcao_id . '(' ')'
+
+    '('  shift, and go to state 93
+
+
+state 56
+
+   33 comandos: fluxo_controle . comandos
+   35         | fluxo_controle .
+
+    TK_PR_IF          shift, and go to state 36
+    TK_PR_WHILE       shift, and go to state 37
+    TK_PR_DO          shift, and go to state 38
+    TK_PR_INPUT       shift, and go to state 39
+    TK_PR_OUTPUT      shift, and go to state 40
+    TK_PR_RETURN      shift, and go to state 41
+    TK_IDENTIFICADOR  shift, and go to state 42
+    ';'               shift, and go to state 43
+    '{'               shift, and go to state 28
+
+    $default  reduce using rule 35 (comandos)
+
+    bloco                  go to state 45
+    comandos               go to state 94
+    comando_simples        go to state 47
+    atribuicao             go to state 48
+    variavel_atr_simples   go to state 49
+    variavel_atr_index_id  go to state 50
+    entrada                go to state 51
+    saida                  go to state 52
+    retorno                go to state 53
+    chamada_funcao         go to state 54
+    chamada_funcao_id      go to state 55
+    fluxo_controle         go to state 56
+
+
+state 57
+
+   21 decl_funcao: cabecalho decl_locais passou_decl_action bloco .
+
+    $default  reduce using rule 21 (decl_funcao)
+
+
+state 58
+
+   16 dimensoes: '[' TK_LIT_INT . ']'
+   17          | '[' TK_LIT_INT . ']' dimensoes
+
+    ']'  shift, and go to state 95
+
+
+state 59
+
+   15 decl_vetor: tipo ':' TK_IDENTIFICADOR dimensoes ';' .
+
+    $default  reduce using rule 15 (decl_vetor)
+
+
+state 60
+
+   24 cabecalho: tipo ':' id_funcao init_escopo_local_action '(' . decl_parametro ')'
+   25          | tipo ':' id_funcao init_escopo_local_action '(' . ')'
+
+    TK_PR_INT     shift, and go to state 4
+    TK_PR_FLOAT   shift, and go to state 5
+    TK_PR_BOOL    shift, and go to state 6
+    TK_PR_CHAR    shift, and go to state 7
+    TK_PR_STRING  shift, and go to state 8
+    ')'           shift, and go to state 96
+
+    tipo            go to state 97
+    decl_parametro  go to state 98
+
+
+state 61
+
+   92 fluxo_controle: TK_PR_IF '(' . expressao_logica ')' TK_PR_THEN then_else
+   93               | TK_PR_IF '(' . expressao_logica ')' TK_PR_THEN then TK_PR_ELSE then_else
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 99
+    expressao              go to state 100
+    expressao_indexada_id  go to state 84
+
+
+state 62
+
+   94 fluxo_controle: TK_PR_WHILE '(' . expressao_logica ')' TK_PR_DO comandos_while_do ';'
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 101
+    expressao              go to state 100
+    expressao_indexada_id  go to state 84
+
+
+state 63
+
+  101 comandos_while_do: bloco .
+
+    $default  reduce using rule 101 (comandos_while_do)
+
+
+state 64
+
+  100 comandos_while_do: comando .
+
+    $default  reduce using rule 100 (comandos_while_do)
+
+
+state 65
+
+   39 comando: comando_simples .
+
+    $default  reduce using rule 39 (comando)
+
+
+state 66
+
+   40 comando: fluxo_controle .
+
+    $default  reduce using rule 40 (comando)
+
+
+state 67
+
+   95 fluxo_controle: TK_PR_DO comandos_while_do . TK_PR_WHILE '(' expressao_logica ')' ';'
+
+    TK_PR_WHILE  shift, and go to state 102
+
+
+state 68
+
+   52 entrada: TK_PR_INPUT $@4 . TK_IDENTIFICADOR
+
+    TK_IDENTIFICADOR  shift, and go to state 103
+
+
+state 69
+
+   79 expressao: TK_LIT_INT .
+
+    $default  reduce using rule 79 (expressao)
+
+
+state 70
+
+   82 expressao: TK_LIT_FLOAT .
+
+    $default  reduce using rule 82 (expressao)
+
+
+state 71
+
+   81 expressao: TK_LIT_FALSE .
+
+    $default  reduce using rule 81 (expressao)
+
+
+state 72
+
+   80 expressao: TK_LIT_TRUE .
+
+    $default  reduce using rule 80 (expressao)
+
+
+state 73
+
+   85 expressao: TK_LIT_CHAR .
+
+    $default  reduce using rule 85 (expressao)
+
+
+state 74
+
+   84 expressao: TK_LIT_STRING .
+
+    $default  reduce using rule 84 (expressao)
+
+
+state 75
+
+   59 chamada_funcao_id: TK_IDENTIFICADOR .
+   78 expressao: TK_IDENTIFICADOR .
+   86 expressao_indexada_id: TK_IDENTIFICADOR .
+
+    '['       reduce using rule 86 (expressao_indexada_id)
+    '('       reduce using rule 59 (chamada_funcao_id)
+    $default  reduce using rule 78 (expressao)
+
+
+state 76
+
+   64 expressao_aritmetica: '-' . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 104
+    expressao_indexada_id  go to state 84
+
+
+state 77
+
+   73 expressao_logica: '!' . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 105
+    expressao_indexada_id  go to state 84
+
+
+state 78
+
+   76 expressao: '(' . expressao ')'
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 106
+    expressao_indexada_id  go to state 84
+
+
+state 79
+
+   53 saida: TK_PR_OUTPUT lista_elementos .
+
+    $default  reduce using rule 53 (saida)
+
+
+state 80
+
+   83 expressao: chamada_funcao .
+
+    $default  reduce using rule 83 (expressao)
+
+
+state 81
+
+   74 expressao: expressao_aritmetica .
+
+    $default  reduce using rule 74 (expressao)
+
+
+state 82
+
+   75 expressao: expressao_logica .
+
+    $default  reduce using rule 75 (expressao)
+
+
+state 83
+
+   54 lista_elementos: expressao .
+   55                | expressao . ',' lista_elementos
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_LE   shift, and go to state 107
+    TK_OC_GE   shift, and go to state 108
+    TK_OC_EQ   shift, and go to state 109
+    TK_OC_NE   shift, and go to state 110
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '<'        shift, and go to state 113
+    '>'        shift, and go to state 114
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+    ','        shift, and go to state 119
+
+    $default  reduce using rule 54 (lista_elementos)
+
+
+state 84
+
+   77 expressao: expressao_indexada_id . expressao_indexada_dim
+
+    '['  shift, and go to state 120
+
+    expressao_indexada_dim  go to state 121
+
+
+state 85
+
+   56 retorno: TK_PR_RETURN expressao .
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_LE   shift, and go to state 107
+    TK_OC_GE   shift, and go to state 108
+    TK_OC_EQ   shift, and go to state 109
+    TK_OC_NE   shift, and go to state 110
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '<'        shift, and go to state 113
+    '>'        shift, and go to state 114
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+
+    $default  reduce using rule 56 (retorno)
+
+
+state 86
+
+   48 variavel_atr_simples: TK_IDENTIFICADOR '=' .
+
+    $default  reduce using rule 48 (variavel_atr_simples)
+
+
+state 87
+
+   36 comandos: bloco ';' . comandos
+
+    TK_PR_IF          shift, and go to state 36
+    TK_PR_WHILE       shift, and go to state 37
+    TK_PR_DO          shift, and go to state 38
+    TK_PR_INPUT       shift, and go to state 39
+    TK_PR_OUTPUT      shift, and go to state 40
+    TK_PR_RETURN      shift, and go to state 41
+    TK_IDENTIFICADOR  shift, and go to state 42
+    ';'               shift, and go to state 43
+    '{'               shift, and go to state 28
+
+    bloco                  go to state 45
+    comandos               go to state 122
+    comando_simples        go to state 47
+    atribuicao             go to state 48
+    variavel_atr_simples   go to state 49
+    variavel_atr_index_id  go to state 50
+    entrada                go to state 51
+    saida                  go to state 52
+    retorno                go to state 53
+    chamada_funcao         go to state 54
+    chamada_funcao_id      go to state 55
+    fluxo_controle         go to state 56
+
+
+state 88
+
+   30 bloco: '{' comandos '}' .
+
+    $default  reduce using rule 30 (bloco)
+
+
+state 89
+
+   32 comandos: comando_simples ';' . comandos
+   34         | comando_simples ';' .
+
+    TK_PR_IF          shift, and go to state 36
+    TK_PR_WHILE       shift, and go to state 37
+    TK_PR_DO          shift, and go to state 38
+    TK_PR_INPUT       shift, and go to state 39
+    TK_PR_OUTPUT      shift, and go to state 40
+    TK_PR_RETURN      shift, and go to state 41
+    TK_IDENTIFICADOR  shift, and go to state 42
+    ';'               shift, and go to state 43
+    '{'               shift, and go to state 28
+
+    $default  reduce using rule 34 (comandos)
+
+    bloco                  go to state 45
+    comandos               go to state 123
+    comando_simples        go to state 47
+    atribuicao             go to state 48
+    variavel_atr_simples   go to state 49
+    variavel_atr_index_id  go to state 50
+    entrada                go to state 51
+    saida                  go to state 52
+    retorno                go to state 53
+    chamada_funcao         go to state 54
+    chamada_funcao_id      go to state 55
+    fluxo_controle         go to state 56
+
+
+state 90
+
+   46 atribuicao: variavel_atr_simples expressao .
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_LE   shift, and go to state 107
+    TK_OC_GE   shift, and go to state 108
+    TK_OC_EQ   shift, and go to state 109
+    TK_OC_NE   shift, and go to state 110
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '<'        shift, and go to state 113
+    '>'        shift, and go to state 114
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+
+    $default  reduce using rule 46 (atribuicao)
+
+
+state 91
+
+   50 variavel_atr_index_arvore: '[' .
+
+    $default  reduce using rule 50 (variavel_atr_index_arvore)
+
+
+state 92
+
+   47 atribuicao: variavel_atr_index_id variavel_atr_index_arvore . expressao ']' '=' expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 124
+    expressao_indexada_id  go to state 84
+
+
+state 93
+
+   57 chamada_funcao: chamada_funcao_id '(' . lista_argumentos ')'
+   58               | chamada_funcao_id '(' . ')'
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+    ')'               shift, and go to state 125
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 126
+    expressao_indexada_id  go to state 84
+    lista_argumentos       go to state 127
+
+
+state 94
+
+   33 comandos: fluxo_controle comandos .
+
+    $default  reduce using rule 33 (comandos)
+
+
+state 95
+
+   16 dimensoes: '[' TK_LIT_INT ']' .
+   17          | '[' TK_LIT_INT ']' . dimensoes
+
+    '['  shift, and go to state 32
+
+    $default  reduce using rule 16 (dimensoes)
+
+    dimensoes  go to state 128
+
+
+state 96
+
+   25 cabecalho: tipo ':' id_funcao init_escopo_local_action '(' ')' .
+
+    $default  reduce using rule 25 (cabecalho)
+
+
+state 97
+
+   18 decl_parametro: tipo . ':' TK_IDENTIFICADOR
+   20               | tipo . ':' TK_IDENTIFICADOR ',' $@3 decl_parametro
+
+    ':'  shift, and go to state 129
+
+
+state 98
+
+   24 cabecalho: tipo ':' id_funcao init_escopo_local_action '(' decl_parametro . ')'
+
+    ')'  shift, and go to state 130
+
+
+state 99
+
+   75 expressao: expressao_logica .
+   92 fluxo_controle: TK_PR_IF '(' expressao_logica . ')' TK_PR_THEN then_else
+   93               | TK_PR_IF '(' expressao_logica . ')' TK_PR_THEN then TK_PR_ELSE then_else
+
+    ')'  shift, and go to state 131
+
+    $default  reduce using rule 75 (expressao)
+
+
+state 100
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_LE   shift, and go to state 107
+    TK_OC_GE   shift, and go to state 108
+    TK_OC_EQ   shift, and go to state 109
+    TK_OC_NE   shift, and go to state 110
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '<'        shift, and go to state 113
+    '>'        shift, and go to state 114
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+
+
+state 101
+
+   75 expressao: expressao_logica .
+   94 fluxo_controle: TK_PR_WHILE '(' expressao_logica . ')' TK_PR_DO comandos_while_do ';'
+
+    ')'  shift, and go to state 132
+
+    $default  reduce using rule 75 (expressao)
+
+
+state 102
+
+   95 fluxo_controle: TK_PR_DO comandos_while_do TK_PR_WHILE . '(' expressao_logica ')' ';'
+
+    '('  shift, and go to state 133
+
+
+state 103
+
+   52 entrada: TK_PR_INPUT $@4 TK_IDENTIFICADOR .
+
+    $default  reduce using rule 52 (entrada)
+
+
+state 104
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   64                     | '-' expressao .
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 64 (expressao_aritmetica)
+
+
+state 105
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+   73                 | '!' expressao .
+
+    $default  reduce using rule 73 (expressao_logica)
+
+
+state 106
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+   76 expressao: '(' expressao . ')'
+
+    TK_OC_LE   shift, and go to state 107
+    TK_OC_GE   shift, and go to state 108
+    TK_OC_EQ   shift, and go to state 109
+    TK_OC_NE   shift, and go to state 110
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '<'        shift, and go to state 113
+    '>'        shift, and go to state 114
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+    ')'        shift, and go to state 134
+
+
+state 107
+
+   65 expressao_logica: expressao TK_OC_LE . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 135
+    expressao_indexada_id  go to state 84
+
+
+state 108
+
+   66 expressao_logica: expressao TK_OC_GE . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 136
+    expressao_indexada_id  go to state 84
+
+
+state 109
+
+   69 expressao_logica: expressao TK_OC_EQ . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 137
+    expressao_indexada_id  go to state 84
+
+
+state 110
+
+   70 expressao_logica: expressao TK_OC_NE . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 138
+    expressao_indexada_id  go to state 84
+
+
+state 111
+
+   71 expressao_logica: expressao TK_OC_AND . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 139
+    expressao_indexada_id  go to state 84
+
+
+state 112
+
+   72 expressao_logica: expressao TK_OC_OR . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 140
+    expressao_indexada_id  go to state 84
+
+
+state 113
+
+   67 expressao_logica: expressao '<' . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 141
+    expressao_indexada_id  go to state 84
+
+
+state 114
+
+   68 expressao_logica: expressao '>' . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 142
+    expressao_indexada_id  go to state 84
+
+
+state 115
+
+   60 expressao_aritmetica: expressao '+' . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 143
+    expressao_indexada_id  go to state 84
+
+
+state 116
+
+   61 expressao_aritmetica: expressao '-' . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 144
+    expressao_indexada_id  go to state 84
+
+
+state 117
+
+   62 expressao_aritmetica: expressao '*' . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 145
+    expressao_indexada_id  go to state 84
+
+
+state 118
+
+   63 expressao_aritmetica: expressao '/' . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 146
+    expressao_indexada_id  go to state 84
+
+
+state 119
+
+   55 lista_elementos: expressao ',' . lista_elementos
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    lista_elementos        go to state 147
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 83
+    expressao_indexada_id  go to state 84
+
+
+state 120
+
+   87 expressao_indexada_dim: '[' . expressao ']'
+   88                       | '[' . expressao ']' expressao_indexada_dim
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 148
+    expressao_indexada_id  go to state 84
+
+
+state 121
+
+   77 expressao: expressao_indexada_id expressao_indexada_dim .
+
+    $default  reduce using rule 77 (expressao)
+
+
+state 122
+
+   36 comandos: bloco ';' comandos .
+
+    $default  reduce using rule 36 (comandos)
+
+
+state 123
+
+   32 comandos: comando_simples ';' comandos .
+
+    $default  reduce using rule 32 (comandos)
+
+
+state 124
+
+   47 atribuicao: variavel_atr_index_id variavel_atr_index_arvore expressao . ']' '=' expressao
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_LE   shift, and go to state 107
+    TK_OC_GE   shift, and go to state 108
+    TK_OC_EQ   shift, and go to state 109
+    TK_OC_NE   shift, and go to state 110
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '<'        shift, and go to state 113
+    '>'        shift, and go to state 114
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+    ']'        shift, and go to state 149
+
+
+state 125
+
+   58 chamada_funcao: chamada_funcao_id '(' ')' .
+
+    $default  reduce using rule 58 (chamada_funcao)
+
+
+state 126
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+   89 lista_argumentos: expressao .
+   91                 | expressao . ',' $@5 lista_argumentos
+
+    TK_OC_LE   shift, and go to state 107
+    TK_OC_GE   shift, and go to state 108
+    TK_OC_EQ   shift, and go to state 109
+    TK_OC_NE   shift, and go to state 110
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '<'        shift, and go to state 113
+    '>'        shift, and go to state 114
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+    ','        shift, and go to state 150
+
+    $default  reduce using rule 89 (lista_argumentos)
+
+
+state 127
+
+   57 chamada_funcao: chamada_funcao_id '(' lista_argumentos . ')'
+
+    ')'  shift, and go to state 151
+
+
+state 128
+
+   17 dimensoes: '[' TK_LIT_INT ']' dimensoes .
+
+    $default  reduce using rule 17 (dimensoes)
+
+
+state 129
+
+   18 decl_parametro: tipo ':' . TK_IDENTIFICADOR
+   20               | tipo ':' . TK_IDENTIFICADOR ',' $@3 decl_parametro
+
+    TK_IDENTIFICADOR  shift, and go to state 152
+
+
+state 130
+
+   24 cabecalho: tipo ':' id_funcao init_escopo_local_action '(' decl_parametro ')' .
+
+    $default  reduce using rule 24 (cabecalho)
+
+
+state 131
+
+   92 fluxo_controle: TK_PR_IF '(' expressao_logica ')' . TK_PR_THEN then_else
+   93               | TK_PR_IF '(' expressao_logica ')' . TK_PR_THEN then TK_PR_ELSE then_else
+
+    TK_PR_THEN  shift, and go to state 153
+
+
+state 132
+
+   94 fluxo_controle: TK_PR_WHILE '(' expressao_logica ')' . TK_PR_DO comandos_while_do ';'
+
+    TK_PR_DO  shift, and go to state 154
+
+
+state 133
+
+   95 fluxo_controle: TK_PR_DO comandos_while_do TK_PR_WHILE '(' . expressao_logica ')' ';'
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 155
+    expressao              go to state 100
+    expressao_indexada_id  go to state 84
+
+
+state 134
+
+   76 expressao: '(' expressao ')' .
+
+    $default  reduce using rule 76 (expressao)
+
+
+state 135
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   65                 | expressao TK_OC_LE expressao .
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+
+    TK_OC_LE  error (nonassociative)
+    TK_OC_GE  error (nonassociative)
+    TK_OC_EQ  error (nonassociative)
+    TK_OC_NE  error (nonassociative)
+    '<'       error (nonassociative)
+    '>'       error (nonassociative)
+
+    $default  reduce using rule 65 (expressao_logica)
+
+
+state 136
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   66                 | expressao TK_OC_GE expressao .
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+
+    TK_OC_LE  error (nonassociative)
+    TK_OC_GE  error (nonassociative)
+    TK_OC_EQ  error (nonassociative)
+    TK_OC_NE  error (nonassociative)
+    '<'       error (nonassociative)
+    '>'       error (nonassociative)
+
+    $default  reduce using rule 66 (expressao_logica)
+
+
+state 137
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   69                 | expressao TK_OC_EQ expressao .
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+
+    TK_OC_LE  error (nonassociative)
+    TK_OC_GE  error (nonassociative)
+    TK_OC_EQ  error (nonassociative)
+    TK_OC_NE  error (nonassociative)
+    '<'       error (nonassociative)
+    '>'       error (nonassociative)
+
+    $default  reduce using rule 69 (expressao_logica)
+
+
+state 138
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   70                 | expressao TK_OC_NE expressao .
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+
+    TK_OC_LE  error (nonassociative)
+    TK_OC_GE  error (nonassociative)
+    TK_OC_EQ  error (nonassociative)
+    TK_OC_NE  error (nonassociative)
+    '<'       error (nonassociative)
+    '>'       error (nonassociative)
+
+    $default  reduce using rule 70 (expressao_logica)
+
+
+state 139
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   71                 | expressao TK_OC_AND expressao .
+   72                 | expressao . TK_OC_OR expressao
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 71 (expressao_logica)
+
+
+state 140
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+   72                 | expressao TK_OC_OR expressao .
+
+    '+'  shift, and go to state 115
+    '-'  shift, and go to state 116
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 72 (expressao_logica)
+
+
+state 141
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   67                 | expressao '<' expressao .
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+
+    TK_OC_LE  error (nonassociative)
+    TK_OC_GE  error (nonassociative)
+    TK_OC_EQ  error (nonassociative)
+    TK_OC_NE  error (nonassociative)
+    '<'       error (nonassociative)
+    '>'       error (nonassociative)
+
+    $default  reduce using rule 67 (expressao_logica)
+
+
+state 142
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   68                 | expressao '>' expressao .
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+
+    TK_OC_LE  error (nonassociative)
+    TK_OC_GE  error (nonassociative)
+    TK_OC_EQ  error (nonassociative)
+    TK_OC_NE  error (nonassociative)
+    '<'       error (nonassociative)
+    '>'       error (nonassociative)
+
+    $default  reduce using rule 68 (expressao_logica)
+
+
+state 143
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   60                     | expressao '+' expressao .
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 60 (expressao_aritmetica)
+
+
+state 144
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   61                     | expressao '-' expressao .
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    '*'  shift, and go to state 117
+    '/'  shift, and go to state 118
+
+    $default  reduce using rule 61 (expressao_aritmetica)
+
+
+state 145
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   62                     | expressao '*' expressao .
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    $default  reduce using rule 62 (expressao_aritmetica)
+
+
+state 146
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   63                     | expressao '/' expressao .
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    $default  reduce using rule 63 (expressao_aritmetica)
+
+
+state 147
+
+   55 lista_elementos: expressao ',' lista_elementos .
+
+    $default  reduce using rule 55 (lista_elementos)
+
+
+state 148
+
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+   87 expressao_indexada_dim: '[' expressao . ']'
+   88                       | '[' expressao . ']' expressao_indexada_dim
+
+    TK_OC_LE   shift, and go to state 107
+    TK_OC_GE   shift, and go to state 108
+    TK_OC_EQ   shift, and go to state 109
+    TK_OC_NE   shift, and go to state 110
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '<'        shift, and go to state 113
+    '>'        shift, and go to state 114
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+    ']'        shift, and go to state 156
+
+
+state 149
+
+   47 atribuicao: variavel_atr_index_id variavel_atr_index_arvore expressao ']' . '=' expressao
+
+    '='  shift, and go to state 157
+
+
+state 150
+
+   91 lista_argumentos: expressao ',' . $@5 lista_argumentos
+
+    $default  reduce using rule 90 ($@5)
+
+    $@5  go to state 158
+
+
+state 151
+
+   57 chamada_funcao: chamada_funcao_id '(' lista_argumentos ')' .
+
+    $default  reduce using rule 57 (chamada_funcao)
+
+
+state 152
+
+   18 decl_parametro: tipo ':' TK_IDENTIFICADOR .
+   20               | tipo ':' TK_IDENTIFICADOR . ',' $@3 decl_parametro
+
+    ','  shift, and go to state 159
+
+    $default  reduce using rule 18 (decl_parametro)
+
+
+state 153
+
+   92 fluxo_controle: TK_PR_IF '(' expressao_logica ')' TK_PR_THEN . then_else
+   93               | TK_PR_IF '(' expressao_logica ')' TK_PR_THEN . then TK_PR_ELSE then_else
+
+    TK_PR_IF          shift, and go to state 36
+    TK_PR_WHILE       shift, and go to state 37
+    TK_PR_DO          shift, and go to state 38
+    TK_PR_INPUT       shift, and go to state 39
+    TK_PR_OUTPUT      shift, and go to state 40
+    TK_PR_RETURN      shift, and go to state 41
+    TK_IDENTIFICADOR  shift, and go to state 42
+    '{'               shift, and go to state 28
+
+    bloco                  go to state 160
+    comando                go to state 161
+    comando_simples        go to state 65
+    atribuicao             go to state 48
+    variavel_atr_simples   go to state 49
+    variavel_atr_index_id  go to state 50
+    entrada                go to state 51
+    saida                  go to state 52
+    retorno                go to state 53
+    chamada_funcao         go to state 54
+    chamada_funcao_id      go to state 55
+    fluxo_controle         go to state 66
+    then                   go to state 162
+    then_else              go to state 163
+
+
+state 154
+
+   94 fluxo_controle: TK_PR_WHILE '(' expressao_logica ')' TK_PR_DO . comandos_while_do ';'
+
+    TK_PR_IF          shift, and go to state 36
+    TK_PR_WHILE       shift, and go to state 37
+    TK_PR_DO          shift, and go to state 38
+    TK_PR_INPUT       shift, and go to state 39
+    TK_PR_OUTPUT      shift, and go to state 40
+    TK_PR_RETURN      shift, and go to state 41
+    TK_IDENTIFICADOR  shift, and go to state 42
+    '{'               shift, and go to state 28
+
+    bloco                  go to state 63
+    comando                go to state 64
+    comando_simples        go to state 65
+    atribuicao             go to state 48
+    variavel_atr_simples   go to state 49
+    variavel_atr_index_id  go to state 50
+    entrada                go to state 51
+    saida                  go to state 52
+    retorno                go to state 53
+    chamada_funcao         go to state 54
+    chamada_funcao_id      go to state 55
+    fluxo_controle         go to state 66
+    comandos_while_do      go to state 164
+
+
+state 155
+
+   75 expressao: expressao_logica .
+   95 fluxo_controle: TK_PR_DO comandos_while_do TK_PR_WHILE '(' expressao_logica . ')' ';'
+
+    ')'  shift, and go to state 165
+
+    $default  reduce using rule 75 (expressao)
+
+
+state 156
+
+   87 expressao_indexada_dim: '[' expressao ']' .
+   88                       | '[' expressao ']' . expressao_indexada_dim
+
+    '['  shift, and go to state 120
+
+    $default  reduce using rule 87 (expressao_indexada_dim)
+
+    expressao_indexada_dim  go to state 166
+
+
+state 157
+
+   47 atribuicao: variavel_atr_index_id variavel_atr_index_arvore expressao ']' '=' . expressao
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 167
+    expressao_indexada_id  go to state 84
+
+
+state 158
+
+   91 lista_argumentos: expressao ',' $@5 . lista_argumentos
+
+    TK_LIT_INT        shift, and go to state 69
+    TK_LIT_FLOAT      shift, and go to state 70
+    TK_LIT_FALSE      shift, and go to state 71
+    TK_LIT_TRUE       shift, and go to state 72
+    TK_LIT_CHAR       shift, and go to state 73
+    TK_LIT_STRING     shift, and go to state 74
+    TK_IDENTIFICADOR  shift, and go to state 75
+    '-'               shift, and go to state 76
+    '!'               shift, and go to state 77
+    '('               shift, and go to state 78
+
+    chamada_funcao         go to state 80
+    chamada_funcao_id      go to state 55
+    expressao_aritmetica   go to state 81
+    expressao_logica       go to state 82
+    expressao              go to state 126
+    expressao_indexada_id  go to state 84
+    lista_argumentos       go to state 168
+
+
+state 159
+
+   20 decl_parametro: tipo ':' TK_IDENTIFICADOR ',' . $@3 decl_parametro
+
+    $default  reduce using rule 19 ($@3)
+
+    $@3  go to state 169
+
+
+state 160
+
+   97 then: bloco .
+   99 then_else: bloco . ';'
+
+    ';'  shift, and go to state 170
+
+    $default  reduce using rule 97 (then)
+
+
+state 161
+
+   96 then: comando .
+   98 then_else: comando . ';'
+
+    ';'  shift, and go to state 171
+
+    $default  reduce using rule 96 (then)
+
+
+state 162
+
+   93 fluxo_controle: TK_PR_IF '(' expressao_logica ')' TK_PR_THEN then . TK_PR_ELSE then_else
+
+    TK_PR_ELSE  shift, and go to state 172
+
+
+state 163
+
+   92 fluxo_controle: TK_PR_IF '(' expressao_logica ')' TK_PR_THEN then_else .
+
+    $default  reduce using rule 92 (fluxo_controle)
+
+
+state 164
+
+   94 fluxo_controle: TK_PR_WHILE '(' expressao_logica ')' TK_PR_DO comandos_while_do . ';'
+
+    ';'  shift, and go to state 173
+
+
+state 165
+
+   95 fluxo_controle: TK_PR_DO comandos_while_do TK_PR_WHILE '(' expressao_logica ')' . ';'
+
+    ';'  shift, and go to state 174
+
+
+state 166
+
+   88 expressao_indexada_dim: '[' expressao ']' expressao_indexada_dim .
+
+    $default  reduce using rule 88 (expressao_indexada_dim)
+
+
+state 167
+
+   47 atribuicao: variavel_atr_index_id variavel_atr_index_arvore expressao ']' '=' expressao .
+   60 expressao_aritmetica: expressao . '+' expressao
+   61                     | expressao . '-' expressao
+   62                     | expressao . '*' expressao
+   63                     | expressao . '/' expressao
+   65 expressao_logica: expressao . TK_OC_LE expressao
+   66                 | expressao . TK_OC_GE expressao
+   67                 | expressao . '<' expressao
+   68                 | expressao . '>' expressao
+   69                 | expressao . TK_OC_EQ expressao
+   70                 | expressao . TK_OC_NE expressao
+   71                 | expressao . TK_OC_AND expressao
+   72                 | expressao . TK_OC_OR expressao
+
+    TK_OC_LE   shift, and go to state 107
+    TK_OC_GE   shift, and go to state 108
+    TK_OC_EQ   shift, and go to state 109
+    TK_OC_NE   shift, and go to state 110
+    TK_OC_AND  shift, and go to state 111
+    TK_OC_OR   shift, and go to state 112
+    '<'        shift, and go to state 113
+    '>'        shift, and go to state 114
+    '+'        shift, and go to state 115
+    '-'        shift, and go to state 116
+    '*'        shift, and go to state 117
+    '/'        shift, and go to state 118
+
+    $default  reduce using rule 47 (atribuicao)
+
+
+state 168
+
+   91 lista_argumentos: expressao ',' $@5 lista_argumentos .
+
+    $default  reduce using rule 91 (lista_argumentos)
+
+
+state 169
+
+   20 decl_parametro: tipo ':' TK_IDENTIFICADOR ',' $@3 . decl_parametro
+
+    TK_PR_INT     shift, and go to state 4
+    TK_PR_FLOAT   shift, and go to state 5
+    TK_PR_BOOL    shift, and go to state 6
+    TK_PR_CHAR    shift, and go to state 7
+    TK_PR_STRING  shift, and go to state 8
+
+    tipo            go to state 97
+    decl_parametro  go to state 175
+
+
+state 170
+
+   99 then_else: bloco ';' .
+
+    $default  reduce using rule 99 (then_else)
+
+
+state 171
+
+   98 then_else: comando ';' .
+
+    $default  reduce using rule 98 (then_else)
+
+
+state 172
+
+   93 fluxo_controle: TK_PR_IF '(' expressao_logica ')' TK_PR_THEN then TK_PR_ELSE . then_else
+
+    TK_PR_IF          shift, and go to state 36
+    TK_PR_WHILE       shift, and go to state 37
+    TK_PR_DO          shift, and go to state 38
+    TK_PR_INPUT       shift, and go to state 39
+    TK_PR_OUTPUT      shift, and go to state 40
+    TK_PR_RETURN      shift, and go to state 41
+    TK_IDENTIFICADOR  shift, and go to state 42
+    '{'               shift, and go to state 28
+
+    bloco                  go to state 176
+    comando                go to state 177
+    comando_simples        go to state 65
+    atribuicao             go to state 48
+    variavel_atr_simples   go to state 49
+    variavel_atr_index_id  go to state 50
+    entrada                go to state 51
+    saida                  go to state 52
+    retorno                go to state 53
+    chamada_funcao         go to state 54
+    chamada_funcao_id      go to state 55
+    fluxo_controle         go to state 66
+    then_else              go to state 178
+
+
+state 173
+
+   94 fluxo_controle: TK_PR_WHILE '(' expressao_logica ')' TK_PR_DO comandos_while_do ';' .
+
+    $default  reduce using rule 94 (fluxo_controle)
+
+
+state 174
+
+   95 fluxo_controle: TK_PR_DO comandos_while_do TK_PR_WHILE '(' expressao_logica ')' ';' .
+
+    $default  reduce using rule 95 (fluxo_controle)
+
+
+state 175
+
+   20 decl_parametro: tipo ':' TK_IDENTIFICADOR ',' $@3 decl_parametro .
+
+    $default  reduce using rule 20 (decl_parametro)
+
+
+state 176
+
+   99 then_else: bloco . ';'
+
+    ';'  shift, and go to state 170
+
+
+state 177
+
+   98 then_else: comando . ';'
+
+    ';'  shift, and go to state 171
+
+
+state 178
+
+   93 fluxo_controle: TK_PR_IF '(' expressao_logica ')' TK_PR_THEN then TK_PR_ELSE then_else .
+
+    $default  reduce using rule 93 (fluxo_controle)

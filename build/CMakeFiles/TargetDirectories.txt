@@ -1,0 +1,1 @@
+/home/rafael/UFRGS - ENGENHARIA DE COMPUTACAO/ETAPA 07/INF01147 - Compiladores/Final/TrabalhoCompiladores/build/CMakeFiles/main.dir

@@ -1,0 +1,35 @@
+/*PROGRAMA EM IKS*/
+/*IMPLEMENTACAO:
+	Algoritmo que calcula uma aproximacao do numero "e" (numero de Euler)
+*/
+//Clemilson Dias e Rafael da Fonte Lopes da Silva
+
+
+
+float:calc_e_number(int:n)
+float:res;
+float:term;
+int:iter;
+{
+	//'n' tem que ser ao menos 1.
+	//no algoritmo original, 'n' nao precisa ser inteiro.
+
+	if(n <= 0)
+	then {
+		output "Erro: valor 'n' nao eh valido!";
+		return 2.0;	//Aproximacao para 'e'
+	};
+
+	term = (1.0 - 1.0/n);//Assume-se a existencia de "type casting"
+	iter = n - 1;
+	res = term;
+	
+	//Calculo da potencia "n" de 'term'
+	while(iter < 0)
+	do{
+		res = res * term;
+		iter = iter - 1;
+	};
+
+	return 1.0/res;
+}

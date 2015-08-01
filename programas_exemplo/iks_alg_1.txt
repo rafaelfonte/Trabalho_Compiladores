@@ -1,0 +1,29 @@
+/*PROGRAMA EM IKS*/
+/*IMPLEMENTACAO:
+	Algoritmo de calculo de fatorial, nas versoes recursiva e iterativa.
+*/
+//Clemilson Dias e Rafael da Fonte Lopes da Silva
+
+
+
+int:calc_fatorial_rec(int:n)
+{
+	if(n == 1)
+	then return 1
+	else return n*(calc_fatorial_rec(n-1));
+}
+
+int:calc_fatorial_iter(int:n)
+int:l_res;
+int:l_i;
+{
+	l_res = 1;
+	l_i = n;
+	while(l_i > 1)
+	do
+	{
+		l_res = l_res*l_i;
+		l_i = l_i - 1;
+	};
+	return l_res;
+}

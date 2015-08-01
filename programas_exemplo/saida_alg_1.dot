@@ -1,0 +1,85 @@
+digraph G {
+node_0x1f1d390 [label="n"]
+node_0x1f1d400 [label="1"]
+node_0x1f1d420 [label="=="]
+node_0x1f1d420 -> node_0x1f1d390
+node_0x1f1d420 -> node_0x1f1d400
+node_0x1f1d450 [label="1"]
+node_0x1f1d470 [label="return"]
+node_0x1f1d470 -> node_0x1f1d450
+node_0x1f1d4a0 [label="n"]
+node_0x1f1d4c0 [label="calc_fatorial_rec"]
+node_0x1f1d4e0 [label="n"]
+node_0x1f1d500 [label="1"]
+node_0x1f1d520 [label="-"]
+node_0x1f1d520 -> node_0x1f1d4e0
+node_0x1f1d520 -> node_0x1f1d500
+node_0x1f1d550 [label="call"]
+node_0x1f1d550 -> node_0x1f1d4c0
+node_0x1f1d550 -> node_0x1f1d520
+node_0x1f1d580 [label="*"]
+node_0x1f1d580 -> node_0x1f1d4a0
+node_0x1f1d580 -> node_0x1f1d550
+node_0x1f1d5b0 [label="return"]
+node_0x1f1d5b0 -> node_0x1f1d580
+node_0x1f1d5e0 [label="ifelse"]
+node_0x1f1d5e0 -> node_0x1f1d420
+node_0x1f1d5e0 -> node_0x1f1d470
+node_0x1f1d5e0 -> node_0x1f1d5b0
+node_0x1f1d620 [label="block"]
+node_0x1f1d620 -> node_0x1f1d5e0
+node_0x1f1d650 [label="calc_fatorial_rec"]
+node_0x1f1d650 -> node_0x1f1d620
+node_0x1f1d770 [label="l_res"]
+node_0x1f1d790 [label="1"]
+node_0x1f1d7b0 [label="="]
+node_0x1f1d7b0 -> node_0x1f1d770
+node_0x1f1d7b0 -> node_0x1f1d790
+node_0x1f1d7e0 [label="l_i"]
+node_0x1f1d800 [label="n"]
+node_0x1f1d820 [label="="]
+node_0x1f1d820 -> node_0x1f1d7e0
+node_0x1f1d820 -> node_0x1f1d800
+node_0x1f1d850 [label="l_i"]
+node_0x1f1d870 [label="1"]
+node_0x1f1d890 [label=">"]
+node_0x1f1d890 -> node_0x1f1d850
+node_0x1f1d890 -> node_0x1f1d870
+node_0x1f1d8c0 [label="l_res"]
+node_0x1f1d8e0 [label="l_res"]
+node_0x1f1d900 [label="l_i"]
+node_0x1f1d920 [label="*"]
+node_0x1f1d920 -> node_0x1f1d8e0
+node_0x1f1d920 -> node_0x1f1d900
+node_0x1f1d950 [label="="]
+node_0x1f1d950 -> node_0x1f1d8c0
+node_0x1f1d950 -> node_0x1f1d920
+node_0x1f1d980 [label="l_i"]
+node_0x1f1d9a0 [label="l_i"]
+node_0x1f1d9c0 [label="1"]
+node_0x1f1d9e0 [label="-"]
+node_0x1f1d9e0 -> node_0x1f1d9a0
+node_0x1f1d9e0 -> node_0x1f1d9c0
+node_0x1f1da10 [label="="]
+node_0x1f1da10 -> node_0x1f1d980
+node_0x1f1da10 -> node_0x1f1d9e0
+node_0x1f1d950 -> node_0x1f1da10
+node_0x1f1da40 [label="block"]
+node_0x1f1da40 -> node_0x1f1d950
+node_0x1f1da70 [label="whiledo"]
+node_0x1f1da70 -> node_0x1f1d890
+node_0x1f1da70 -> node_0x1f1da40
+node_0x1f1daa0 [label="l_res"]
+node_0x1f1dac0 [label="return"]
+node_0x1f1dac0 -> node_0x1f1daa0
+node_0x1f1da70 -> node_0x1f1dac0
+node_0x1f1d820 -> node_0x1f1da70
+node_0x1f1d7b0 -> node_0x1f1d820
+node_0x1f1daf0 [label="block"]
+node_0x1f1daf0 -> node_0x1f1d7b0
+node_0x1f1db20 [label="calc_fatorial_iter"]
+node_0x1f1db20 -> node_0x1f1daf0
+node_0x1f1d650 -> node_0x1f1db20
+node_0x1f1db50 [label="programa"]
+node_0x1f1db50 -> node_0x1f1d650
+}
